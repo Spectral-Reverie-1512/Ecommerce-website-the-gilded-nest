@@ -1,0 +1,85 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="product-detail py-5" style="background: #f8f9fa;">
+    <div class="container">
+        <div class="row g-4 align-items-start">
+            
+            <!-- Product Image -->
+            <div class="col-md-5">
+                <div class="card shadow-sm border-0 rounded-4">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img-top rounded-4">
+                    {% else %}
+                        <img src="{% static 'img/placeholder.png' %}" alt="No image" class="card-img-top rounded-4">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-md-7">
+                <h1 class="fw-bold">
+                    {{ product.name }}
+                    {% if product.discount_price %}
+                        <span class="badge bg-danger ms-2">Sale</span>
+                    {% endif %}
+                </h1>
+                
+                <p class="fs-4 fw-semibold text-success mb-1">₹{{ product.display_price }}</p>
+                
+                {% if product.discount_price %}
+                    <p class="text-muted small">
+                        Original: <span style="text-decoration: line-through;">₹{{ product.original_price }}</span>
+                    </p>
+                {% endif %}
+
+                <p class="text-muted">{{ product.description }}</p>
+
+                <!-- Add to Cart Form -->
+                <form method="post" action="{% url 'store:add_to_cart' product.pk %}" class="mt-3">
+                    {% csrf_token %}
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-semibold">Qty:</label>
+                        <input type="number" name="qty" value="1" min="1" class="form-control" style="width: 80px;">
+                        <button type="submit" class="btn btn-primary px-4 rounded-pill">Add to Cart</button>
+                        <a href="#" class="btn btn-success px-4 rounded-pill">Buy Now</a>
+                    </div>
+                </form>
+
+                <p class="mt-3 small text-muted">
+                    <i class="bi bi-arrow-counterclockwise"></i> Return policy: 7 days return on unused products.
+                </p>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <section class="reviews mt-5">
+            <h2 class="fw-bold mb-3">Customer Reviews</h2>
+            
+            {% for review in product.reviews.all %}
+                <div class="card mb-3 border-0 shadow-sm rounded-4 p-3">
+                    <strong>{{ review.user.username }}</strong> — {{ review.rating }} ⭐<br>
+                    <span class="text-muted">{{ review.comment }}</span>
+                </div>
+            {% empty %}
+                <p class="text-muted">No reviews yet.</p>
+            {% endfor %}
+
+            {% if user.is_authenticated %}
+                <h3 class="mt-4">Write a Review</h3>
+                <form method="post" class="card p-3 shadow-sm border-0 rounded-4 mt-2">
+                    {% csrf_token %}
+                    {{ review_form.as_p }}
+                    <button class="btn btn-primary rounded-pill px-4">Submit</button>
+                </form>
+            {% else %}
+                <p class="mt-3">
+                    <a href="/accounts/login/" class="text-decoration-none fw-semibold text-primary">Log in</a> 
+                    to leave a review.
+                </p>
+            {% endif %}
+        </section>
+    </div>
+</section>
+{% endblock %}

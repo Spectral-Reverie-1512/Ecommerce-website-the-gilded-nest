@@ -1,0 +1,28 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+<div class="checkout-container" style="max-width: 600px; margin: auto; padding: 20px;">
+    <h1 class="text-center mb-4">💳 Checkout</h1>
+    
+    <form method="post" class="p-4 bg-light rounded shadow-sm">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input id="name" name="name" type="text" class="form-control" placeholder="John Doe" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Shipping Address</label>
+            <textarea id="address" name="address" class="form-control" rows="3" placeholder="123 Main St, City, State" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="txn" class="form-label">Transaction ID (Simulated)</label>
+            <input id="txn" name="txn" type="text" class="form-control" placeholder="TXN123456789" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 py-2">💰 Pay Now</button>
+    </form>
+</div>
+{% endblock %}

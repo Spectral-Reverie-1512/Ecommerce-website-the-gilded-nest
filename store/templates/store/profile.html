@@ -1,0 +1,57 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5" style="max-width: 800px;">
+    <h1 class="text-center mb-4">👤 My Profile</h1>
+
+    <!-- Profile Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Personal Information</h5>
+            <hr>
+            <p><strong>Name:</strong> {{ request.user.get_full_name }}</p>
+            <p><strong>Email:</strong> {{ request.user.email }}</p>
+            <p><strong>Phone:</strong> {{ profile.phone|default:"Not provided" }}</p>
+        </div>
+    </div>
+
+    <!-- Order History -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">📦 Order History</h5>
+            <hr>
+            {% if orders %}
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for o in orders %}
+                                <tr>
+                                    <td>#{{ o.id }}</td>
+                                    <td>
+                                        {% if o.paid %}
+                                            <span class="badge bg-success">Paid</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>₹{{ o.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No orders yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="cart-container" style="max-width: 900px; margin: auto; padding: 20px;">
+    <h1 style="text-align: center; margin-bottom: 30px;">🛒 Your Cart</h1>
+    
+    {% if order.items.all %}
+        <table class="table table-hover table-bordered align-middle" style="background: #fff; border-radius: 10px; overflow: hidden;">
+            <thead class="table-dark">
+                <tr>
+                    <th>Item</th>
+                    <th style="width: 80px;">Qty</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for it in order.items.all %}
+                    <tr>
+                        <td>
+                            <strong>{{ it.product.name }}</strong>
+                        </td>
+                        <td>{{ it.quantity }}</td>
+                        <td>₹{{ it.product.display_price }}</td>
+                        <td>₹{{ it.subtotal }}</td>
+                        <td>
+                            <a href="{% url 'store:remove_from_cart' it.id %}" class="btn btn-sm btn-danger">
+                                ❌ Remove
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-4 p-3 bg-light rounded shadow-sm">
+            <h4>Total: <span style="color: green;">₹{{ order.total }}</span></h4>
+            <a href="{% url 'store:checkout' %}" class="btn btn-success btn-lg">
+                ✅ Proceed to Checkout
+            </a>
+        </div>
+    {% else %}
+        <div class="text-center p-5 bg-light rounded shadow-sm">
+            <h3>Your cart is empty 🛍️</h3>
+            <p>Browse our products and add something you love!</p>
+            <a href="{% url 'store:categories' %}" class="btn btn-primary">Continue Shopping</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

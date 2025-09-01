@@ -1,0 +1,31 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="mt-5">
+  <h2 class="mb-4">{{ category.name }}</h2>
+  <div class="row g-4">
+    {% for product in products %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card text-center">
+          {% if product.image %}
+            <a href="{% url 'store:product_detail' product.slug %}">
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            </a>
+          {% else %}
+            <a href="{% url 'store:product_detail' product.slug %}">
+              <img src="{% static 'img/product_placeholder.png' %}" class="card-img-top" alt="{{ product.name }}">
+            </a>
+          {% endif %}
+          <div class="card-body">
+            <h6 class="card-title">{{ product.name }}</h6>
+            <p class="card-text">${{ product.price }}</p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No products found in this category.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
